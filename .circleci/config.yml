@@ -111,7 +111,7 @@ jobs:
       - restore_cache:
           keys: [frontend-scan]
       - run:
-          name: run back-end test
+          name: run front-end scan
           command: |
             cd frontend
             npm install
