@@ -406,7 +406,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - install_aws_cli
+      - install_awscli
       - run:
           name: Get old stack workflow id
           command: |
@@ -427,6 +427,7 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
+
 workflows:
   default:
     jobs:
