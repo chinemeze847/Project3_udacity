@@ -365,7 +365,7 @@ jobs:
       - image: python:3.10-alpine3.16
     steps:
       - checkout
-      - install-nodejs
+      - install_nodejs
       - install_aws_cli
       - run:
           name: Install dependencies
