@@ -9,6 +9,7 @@
     - ansible_stdout_callback: yaml
 
   # Get the environment variables from CircleCI and add to the EC2 instance
+  #added a comment
   environment:
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
     - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
