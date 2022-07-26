@@ -1,5 +1,13 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.1
+
+parameters:
+  workflow_id:
+    type: string
+    default: '${CIRCLE_WORKFLOW_ID}'
+
 commands:
   install_aws_cli:
     description: Install AWS cli
