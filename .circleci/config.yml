@@ -386,6 +386,29 @@ jobs:
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dep / Save Old Workflow ID to kvdb.io
+          command: |
+            export OLD_WORKFLOW_ID=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            --no-paginate --output text)
+            echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
+            curl https://kvdb.io/7vS8WBVPLX26zLtuZii9L3/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --stack-name InitialStack
+      - destroy-environment
+      - revert-migrations
+
+  cleanup:
+    docker:
+      - image: amazon/aws-cli
       # Docker image here
     steps:
       # Checkout code from git
@@ -406,7 +429,6 @@ jobs:
             --query "StackSummaries[*].StackName" \
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
             # if [[ "${OldWorkflowID}" != "${OldWorkflowID}" ]]
-
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
               echo $OldWorkflowID $STACKS ${CIRCLE_WORKFLOW_ID:0:7}
